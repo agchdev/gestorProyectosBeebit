@@ -1,0 +1,43 @@
+
+services:
+  db:
+    image: postgres:latest
+    container_name: gestorProBeebit-db
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: gestorpro
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build: ./backend
+    container_name: gestorProBeebit-api
+    restart: always
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://admin:admin@db:5432/gestorpro
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/usr/src/app
+    command: npm run start:dev
+
+  frontend:
+    build: ./frontend
+    container_name: gestorProBeebit-frontend
+    restart: always
+    depends_on:
+      - api
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./frontend:/usr/src/app
+    command: npm run dev
+
+volumes:
+  postgres_data:
