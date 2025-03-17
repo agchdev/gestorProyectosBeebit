@@ -20,12 +20,16 @@ services:
     depends_on:
       - db
     environment:
-      DATABASE_URL: postgres://admin:admin@db:5432/gestorpro
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: admin
+      DB_PASSWORD: admin
+      DB_NAME: gestorpro
     ports:
       - "3000:3000"
     volumes:
       - ./backend:/usr/src/app
-    command: npm run start:dev
+    command: npm run start
 
   frontend:
     build: ./frontend
